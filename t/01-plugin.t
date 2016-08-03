@@ -11,7 +11,7 @@ use warnings;
 use Test::More tests => 1;
 
 BEGIN {
-    use_ok('Navel::Mojolicious::Plugin::JSON::XS');
+    use_ok('Navel::Mojolicious::Plugin::Swagger2::StdResponses');
 }
 
 #-> main
