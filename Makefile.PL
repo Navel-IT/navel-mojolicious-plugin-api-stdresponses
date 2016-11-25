@@ -1,5 +1,5 @@
 # Copyright (C) 2015-2016 Yoann Le Garff, Nicolas Boquet and Yann Le Bras
-# navel-mojolicious-plugin-swagger2-stdresponses is licensed under the Apache License, Version 2.0
+# navel-mojolicious-plugin-openapi-stdresponses is licensed under the Apache License, Version 2.0
 
 #-> BEGIN
 
@@ -15,9 +15,9 @@ use ExtUtils::MakeMaker;
 my $min_perl_version = '5.18.0';
 
 WriteMakefile(
-    NAME => 'Navel::Mojolicious::Plugin::Swagger2::StdResponses',
-    VERSION_FROM => 'lib/Navel/Mojolicious/Plugin/Swagger2/StdResponses.pm',
-    ABSTRACT => 'navel-mojolicious-plugin-swagger2-stdresponses',
+    NAME => 'Navel::Mojolicious::Plugin::OpenAPI::StdResponses',
+    VERSION_FROM => 'lib/Navel/Mojolicious/Plugin/OpenAPI/StdResponses.pm',
+    ABSTRACT => 'navel-mojolicious-plugin-openapi-stdresponses',
     AUTHOR => 'Yoann Le Garff, Nicolas Boquet and Yann Le Bras',
     LICENSE => 'Apache License, Version 2.0',
     META_MERGE => {
@@ -26,7 +26,7 @@ WriteMakefile(
         },
         resources => {
             license => 'http://www.apache.org/licenses/LICENSE-2.0.html',
-            repository => 'http://github.com/Navel-IT/navel-mojolicious-plugin-swagger2-stdresponses'
+            repository => 'http://github.com/Navel-IT/navel-mojolicious-plugin-openapi-stdresponses'
         }
     },
     MIN_PERL_VERSION => $min_perl_version,
