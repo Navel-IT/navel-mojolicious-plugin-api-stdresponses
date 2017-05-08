@@ -1,11 +1,11 @@
 # Copyright (C) 2015-2017 Yoann Le Garff, Nicolas Boquet and Yann Le Bras
-# navel-mojolicious-plugin-openapi-stdresponses is licensed under the Apache License, Version 2.0
+# navel-mojolicious-plugin-api-stdresponses is licensed under the Apache License, Version 2.0
 
 #-> BEGIN
 
 #-> initialization
 
-package Navel::Mojolicious::Plugin::OpenAPI::StdResponses 0.1;
+package Navel::Mojolicious::Plugin::API::StdResponses 0.1;
 
 use Navel::Base;
 
@@ -16,12 +16,32 @@ use Mojo::Base 'Mojolicious::Plugin';
 sub register {
     my ($self, $application, $register_options) = @_;
 
+    my $handler = sub {
+        shift->stash('api.object') ? 'api' : 'json';
+    };
+
+    $application->helper(
+        unauthorized => sub {
+            my $controller = shift;
+
+            $controller->render(
+                $handler->($controller) => {
+                    ok => [],
+                    ko => [
+                        'unauthorized.'
+                    ]
+                },
+                status => 401
+            );
+        }
+    );
+
     $application->helper(
         resource_not_found => sub {
             my ($controller, $resource_name) = @_;
 
             $controller->render(
-                openapi => {
+                $handler->($controller) => {
                     ok => [],
                     ko => [
                         'the resource ' . (defined $resource_name ? $resource_name . ' ' : '') . 'could not be found.'
@@ -37,7 +57,7 @@ sub register {
             my ($controller, $resource_name) = @_;
 
             $controller->render(
-                openapi => {
+                $handler->($controller) => {
                     ok => [],
                     ko => [
                         'the resource ' . (defined $resource_name ? $resource_name . ' ' : '') . 'already exists.'
@@ -65,7 +85,7 @@ __END__
 
 =head1 NAME
 
-Navel::Mojolicious::Plugin::OpenAPI::StdResponses
+Navel::Mojolicious::Plugin::API::StdResponses
 
 =head1 COPYRIGHT
 
@@ -73,6 +93,6 @@ Copyright (C) 2015-2017 Yoann Le Garff, Nicolas Boquet and Yann Le Bras
 
 =head1 LICENSE
 
-navel-mojolicious-plugin-openapi-stdresponses is licensed under the Apache License, Version 2.0
+navel-mojolicious-plugin-api-stdresponses is licensed under the Apache License, Version 2.0
 
 =cut
