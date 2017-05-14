@@ -17,11 +17,11 @@ sub register {
     my ($self, $application, $register_options) = @_;
 
     my $handler = sub {
-        shift->stash('api.object') ? 'api' : 'json';
+        shift->stash('api.object') ? 'openapi' : 'json';
     };
 
     $application->helper(
-        unauthorized => sub {
+        'navel.stdresponses.unauthorized' => sub {
             my $controller = shift;
 
             $controller->render(
@@ -37,7 +37,7 @@ sub register {
     );
 
     $application->helper(
-        resource_not_found => sub {
+        'navel.stdresponses.resource_not_found' => sub {
             my ($controller, $resource_name) = @_;
 
             $controller->render(
@@ -53,7 +53,7 @@ sub register {
     );
 
     $application->helper(
-        resource_already_exists => sub {
+        'navel.stdresponses.resource_already_exists' => sub {
             my ($controller, $resource_name) = @_;
 
             $controller->render(
