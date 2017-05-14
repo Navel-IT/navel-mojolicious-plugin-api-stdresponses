@@ -11,6 +11,8 @@ use Navel::Base;
 
 use Mojo::Base 'Mojolicious::Plugin';
 
+use Navel::Utils 'croak';
+
 #-> methods
 
 sub register {
@@ -19,50 +21,64 @@ sub register {
     my $handler = sub {
         shift->stash('api.object') ? 'openapi' : 'json';
     };
+    
+    $application->helper(
+        'navel.api.definitions.ok_ko' => sub {
+            my ($controller, $ok, $ko) = @_;
+
+            croak('ok must be a ARRAY reference') unless ref $ok eq 'ARRAY';
+            croak('ko must be a ARRAY reference') unless ref $ko eq 'ARRAY';
+
+            {
+                ok => $ok,
+                ko => $ko
+            };
+        }
+    );
 
     $application->helper(
-        'navel.stdresponses.unauthorized' => sub {
+        'navel.api.responses.unauthorized' => sub {
             my $controller = shift;
 
             $controller->render(
-                $handler->($controller) => {
-                    ok => [],
-                    ko => [
+                $handler->($controller) => $controller->navel->api->definitions->ok_ko(
+                    [],
+                    [
                         'unauthorized.'
                     ]
-                },
+                ),
                 status => 401
             );
         }
     );
 
     $application->helper(
-        'navel.stdresponses.resource_not_found' => sub {
+        'navel.api.responses.resource_not_found' => sub {
             my ($controller, $resource_name) = @_;
 
             $controller->render(
-                $handler->($controller) => {
-                    ok => [],
-                    ko => [
+                $handler->($controller) => $controller->navel->api->definitions->ok_ko(
+                    [],
+                    [
                         'the resource ' . (defined $resource_name ? $resource_name . ' ' : '') . 'could not be found.'
                     ]
-                },
+                ),
                 status => 404
             );
         }
     );
 
     $application->helper(
-        'navel.stdresponses.resource_already_exists' => sub {
+        'navel.api.responses.resource_already_exists' => sub {
             my ($controller, $resource_name) = @_;
 
             $controller->render(
-                $handler->($controller) => {
-                    ok => [],
-                    ko => [
+                $handler->($controller) => $controller->navel->api->definitions->ok_ko(
+                    [],
+                    [
                         'the resource ' . (defined $resource_name ? $resource_name . ' ' : '') . 'already exists.'
                     ]
-                },
+                ),
                 status => 409
             );
         }
